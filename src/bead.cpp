@@ -9,13 +9,14 @@
 using namespace std;
 typedef pair<int,int> ii;
 typedef pair<ii, ii> iiii;
+const int inf =987654321;
 int ans = 987654321;
 int n , m ;
 //int d[101][101][101][101];
 int g[101][101];
 
 bool c[101][101][101][101];
-int dy[4] ={0,0,1,-1} ,dx[4]= {1,-1,0,0};
+int dx[4] ={0,0,1,-1} ,dy[4]= {1,-1,0,0};
 queue<iiii> q ;
 void go (int ry,int rx, int by, int bx ,int cnt  ){
     if ( cnt  > ans )return;
@@ -31,6 +32,10 @@ void go (int ry,int rx, int by, int bx ,int cnt  ){
         int nby = by +dy[i];
         int nbx = bx +dx[i];
         if (nry <1 || nrx <1 || nby > n || nbx > m || nry > n || nrx > m || nby<1 || nbx<1) continue ;
+        
+        if ( nry == nby && nrx == nbx )continue;
+        
+        if ( g[nby] [nbx] == 4 ) continue;
         
         if (g[nby][nbx]==3 && g[nry][nrx]==3 ){
             continue;
@@ -58,12 +63,13 @@ void go (int ry,int rx, int by, int bx ,int cnt  ){
 }
 
 int main(){
+    freopen("input.txt","r", stdin);
     int tc;
     cin >>tc;
     
     for (int TC =1 ; TC<=tc ; TC++){
-        
-        
+        ans = 987654321;
+        memset (c, false, sizeof(c));
         memset (g,0,sizeof(g));
         int ry,rx, by,bx;
         scanf("%d%d",&n,&m);
@@ -82,11 +88,13 @@ int main(){
         }
         go (ry,rx,by,bx,0);
         
+        if ( ans == inf) ans =-1;
         printf("%d %d\n", TC ,ans );
     }
     
     
     
 }
+
 
 
