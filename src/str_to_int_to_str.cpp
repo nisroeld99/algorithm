@@ -34,22 +34,17 @@ string int_to_str (int num){
         flag = false;
         num*= -1 ;
     }
-    if (num == 0 ){
-        temp += '0';
-        return temp ;
-    }
-    while ( num >0 ){
+    
+    do{
         temp += num%10 +'0';
         num/=10;
-    }
+    }while ( num > 0 ) ; 
     if (!flag)
         ret += '-';
     for (int i = 0 ; i< temp.size(); i++){
         ret += temp[temp.size()-i-1] ;
-    }
-    
+    } 
     return ret ;
-    
 }
 int main(){
     string str;
