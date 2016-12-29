@@ -1,14 +1,11 @@
 /*
  * picinc.cpp
  *
+ *  코드 오류 잡아야함.  1  2 5 
  *
  */
 
 
-/*
- * 9012.cpp
- *
- */
 #include <stack>
 #include <iostream>
 #include <cstring>
