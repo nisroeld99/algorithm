@@ -53,8 +53,8 @@ int main() {
     int tc ;
     cin >> tc;
     while (tc--){
-        memset ( taken , sizeof ( taken ) , false );
-        memset ( areFriends , sizeof ( areFriends ) , false );
+        memset ( taken ,false, sizeof ( taken ) );
+        memset ( areFriends , false ,sizeof ( areFriends ) );
         
         scanf("%d%d",&n,&m);
         for (int i = 0 ;i < m; i++){
