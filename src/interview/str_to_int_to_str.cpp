@@ -23,7 +23,6 @@ int str_to_int (string str){
     }
     if ( !flag ) sum*=-1;
     return sum;
-    
 }
 
 string int_to_str (int num){
