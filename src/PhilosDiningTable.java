@@ -13,10 +13,10 @@ public class Philostable {
 		philos = new Philosopher[num];		
 		for (int i = 0 ; i<num ; i++){
 			chopstick[i] = new Object();
-			if ( i %2 == 0 )
+	//		if ( i %2 == 0 )
 				philos[i] = new Philosopher(i,i,(i+1)%(num));
-			else 
-				philos[i] = new Philosopher(i,(i+1)%(num),i);
+	//		else 
+	//			philos[i] = new Philosopher(i,(i+1)%(num),i);
 		}
 		
 	}
