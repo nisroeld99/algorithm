@@ -1,101 +1,113 @@
-/*
- * board_cover.cpp
- *
- */
 #include <iostream>
+#include <cstring>
+using namespace std ;
 
 
-using namespace std;
-
-int board[51][51];
-int coverType[4][3][2]=  {
-    {   {0,0}, {1,0} , {0,1}  },
-    {   {0,0}, {0,1} , {1,1}  },
-    {   {0,0}, {1,0} , {1,1}  },
-    {   {0,0}, {1,0} , {1,-1}  }
-};
-void input() ;
-bool set (int type , int ypos, int xpos , int delta );
-int cover ( );
-int a,b;
-int cntt = 0 ;
+char map[22][22];
+int ans = 0 ;
+int n,m;
 
 
+int d[4][3][2] = { {  {0,0}, {1,0}, {1,-1}  }, { {0,0},{1,0},{1,1} }, { {0,0},{1,1},{0,1} }, {{0,0},{0,1},{1,0}}  };
 
-int main() {
-    freopen("input.txt", "r", stdin);
-    int tc;
-    scanf("%d",&tc);
-    while (tc--){
-        input() ;
-        if (cntt %3!=0 )  {
-            printf("0\n");
-            continue;
-        }
-        printf("%d\n", cover() );
-    }
-    
-
+bool in_Range(int ypos, int xpos ){
+    if ( ypos < 0 || xpos <0 || ypos >= m || xpos  >=n ) return false;
+    return true ;
 }
 
-void input ( ){
-    cntt= 0 ;
-    scanf("%d%d",&a, &b);
-    for (int i = 1; i<=a; i++){
-        for (int j=1 ;j<=b ; j++){
-            char c ;
-            cin >> c ;
-            if ( c == '#') board[i][j] = 1;
-            else {
-                board[i][j] = 0 ;
-                cntt ++ ;
-            }
-        }
-    }
-    
-    
-    
-    
-    
-}
 
-bool set (int type ,int ypos ,int xpos ,int delta ){
-    bool ok = true ;
-    
-    for (int i = 0 ; i<3 ; i++){
-        const int ny =  ypos +  coverType[type][i][0];
-        const int nx =  xpos +  coverType[type][i][1];
-        if ( ny < 1 || nx < 1 || ny > a || nx > b )
-            ok = false ;
-        else if ( (board[ny][nx] += delta) > 1 ){ //이미 덮여져 있으면
-            ok = false ;
+
+bool can_cover (int ypos, int xpos , int idx){
+    bool ret= true ;
+    for (int i = 0 ; i<3 ; i++ ){
+        int ny = ypos + d[idx][i][0];
+        int nx = xpos + d[idx][i][1];
+        
+        if (!in_Range(ny, nx) || map[ny][nx] == '#' ){
+            ret= false;
+            break ;
         }
-    }
-    return ok  ;
-}
-int cover () {
-    int y = -1 ; int x= -1 ;
-    for (int i = 1 ; i<=a; i++){
-        for (int j=1 ;j<=b; j++){
-            if ( board[i][j] == 0 ){
-                y = i ;
-                x = j;
-                break;
-            }
-        }
-        if ( y!=-1 ) break ;
-    }
-    if ( y == -1 ) return 1;
-    
-    int ret= 0 ;
-    
-    for (int type = 0 ; type <4 ;type++ ){
-        if ( set(type ,y, x, 1)){
-            ret += cover() ;
-        }
-        set ( type , y, x , -1 ) ;
     }
     return ret ;
 }
 
+void set_cover(int ypos,int xpos ,int idx, int tool ) { // idx : 0~3 , tool : 0 : uncover , 1: cover
+    switch (tool) {
+        case 0: // uncover
+            for (int i = 0 ; i< 3; i ++){
+                int ny = ypos + d[idx][i][0];
+                int nx = xpos + d[idx][i][1];
+                
+                map[ny][nx] = '.';
+            }
+            
+            
+            break;
+        case 1: // cover
+            
+            for (int i = 0 ; i< 3; i ++){
+                int ny = ypos + d[idx][i][0];
+                int nx = xpos + d[idx][i][1];
+                
+                map[ny][nx] = '#';
+            }
+            
+            break;
+            
+        default:
+            break;
+    }
+}
 
+
+void solve( ){
+    
+    
+    int first_y =-1, first_x = -1 ;
+    for (int i = 0 ; i<m; i++){
+        for (int j= 0 ;j<n; j++){
+            if( map[i][j] == '.'){
+                first_y = i , first_x = j;
+                break;
+            }
+        }
+        if ( first_x != -1 )break ;
+
+    }
+    
+    if ( first_y == -1 ){
+        ans ++ ;
+        return ;
+    }
+    
+    for (int i = 0 ; i<4; i++){
+        if ( can_cover(first_y, first_x, i)){
+            set_cover(first_y, first_x, i, 1);
+            solve();
+            set_cover(first_y, first_x, i, 0);
+        }
+    }
+  
+    
+}
+
+
+int main(){
+   // freopen("input.txt", "r", stdin);
+    int tc;
+    cin >> tc;
+    
+    while (tc--){
+        memset ( map ,0 , sizeof(map));
+        ans = 0 ;
+        scanf("%d%d",&m,&n); //m 이 y, n은 x
+        
+        for (int i = 0 ; i<m;  i++){
+            cin >> map[i];
+        }
+        
+        solve ();
+        
+        cout << ans <<endl;
+    }
+}
