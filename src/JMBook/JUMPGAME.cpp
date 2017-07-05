@@ -1,61 +1,67 @@
-/*
- * JUMPGAME.cpp
- *
- */
-#include <cstdlib>
 #include <iostream>
 #include <vector>
-#include <map>
-#include <queue>
 #include <algorithm>
 #include <cstring>
-#include <ctime>
-
+#include <string>
 using namespace std;
 
-
-int g[111][111];
-int d[111][111];
-int dy[2] = {1,0}, dx[2] = {0,1};
-
+int map[101][101];
+int cache[101][101];
+int dy[2] = {0,1}, dx[2] = {1,0};
 int n ;
-bool go (int ypos, int xpos){
-    if ( ypos > n || xpos > n ) return false ;
-    if ( ypos ==n && xpos ==n ) return true ;
-    int & ret = d[ypos][xpos];
-    if (ret !=-1 ) return ret ;
-    int ny ,nx;
-    for (int i = 0 ;i<2; i++){
-        int now_w = g[ypos][xpos];
-        ny = now_w*dy[i] + ypos;
-        nx = now_w*dx[i] + xpos ;
-        if ( ret != 1)
-            ret = go (ny,nx);
+bool inRange(int ypos ,int xpos ){
+    if ( ypos < 1 || xpos < 1 || ypos > n || xpos > n )return false;
+    return true ;
+}
+int solve(int ypos, int xpos ){
+    
+    
+    if (cache[ypos][xpos]!=-1 )
+        return cache[ypos][xpos];
+    
+    int & ret = cache[ypos][xpos];
+    
+    
+    ret = 0 ;
+    if ( ypos == n && xpos == n){
+        return ret = 1;
     }
-    return ret ;
+    
+
+    for (int i = 0 ; i<2; i++){
+        int ny = ypos +dy[i]*map[ypos][xpos];
+        int nx = xpos +dx[i]*map[ypos][xpos];
+        if ( !inRange(ny,nx)) continue;
+        if ( ret!=1 )
+            ret = solve(ny,nx);
+    }
+    
+    return ret;
 }
 
 int main(){
+    
+    //freopen("input.txt", "r", stdin);
+    
+    
     int tc;
-    scanf("%d",&tc);
+    cin >> tc;
+    
     while (tc--){
-        
-        memset ( g, 0 ,sizeof(g));
-        memset ( d, -1 ,sizeof(d));
-        
-        
+        memset (map, 0, sizeof(map));
+        memset (cache,-1, sizeof(cache));
         scanf("%d",&n);
-        for (int i =1 ; i<=n;i++){
-            for (int j=1 ;j<=n; j++){
-                scanf("%d",&g[i][j]);
-            }
-        }
+        for (int i = 1; i<=n; i++)
+            for (int j= 1 ; j<=n ;j++)
+                scanf("%d",&map[i][j]);
         
-        if (go ( 1,1)) {
+        
+        if (solve(1,1))
             printf("YES\n");
-        }else {
+        else
             printf("NO\n");
-        }
+        
+        
+        
     }
-
 }
